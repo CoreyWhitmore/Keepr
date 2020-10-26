@@ -32,7 +32,7 @@ namespace Keepr.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Keep> Get(int id)
+        public ActionResult<Keep> GetById(int id)
         {
             try
             {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using CodeWorks.Auth0Provider;
 using Keepr.Models;
@@ -11,27 +10,38 @@ namespace Keepr.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProfilesController : ControllerBase
+    public class VaultsController : ControllerBase
     {
-        private readonly ProfilesService _ps;
-        private readonly KeepsService _ks;
         private readonly VaultsService _vs;
-        public ProfilesController(ProfilesService ps, KeepsService ks, VaultsService vs)
+        public VaultsController(VaultsService vs)
         {
-            _ps = ps;
-            _ks = ks;
             _vs = vs;
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Vault>> GetByIdAsync(int id)
+        {
+            try
+            {
+                Profile userInfo = await HttpContext.GetUserInfoAsync<Profile>();
+                return Ok(_vs.GetById(id, userInfo));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Profile>> Get()
+        public async Task<ActionResult<Vault>> Create([FromBody] Vault newVault)
         {
             try
             {
                 Profile userInfo = await HttpContext.GetUserInfoAsync<Profile>();
-                return Ok(_ps.GetOrCreateProfile(userInfo));
+                newVault.CreatorId = userInfo.Id;
+                newVault.Creator = userInfo;
+                return Ok(_vs.Create(newVault));
             }
             catch (Exception e)
             {
@@ -39,13 +49,14 @@ namespace Keepr.Controllers
             }
         }
 
-        [HttpGet("{id}/keeps")]
-        public async Task<ActionResult<IEnumerable<Keep>>> GetKeepsById(string id)
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult<Vault>> Delete(int id)
         {
             try
             {
                 Profile userInfo = await HttpContext.GetUserInfoAsync<Profile>();
-                return Ok(_ks.GetByProfileId(id));
+                return Ok(_vs.Delete(id, userInfo));
             }
             catch (Exception e)
             {
@@ -53,18 +64,6 @@ namespace Keepr.Controllers
             }
         }
 
-        [HttpGet("{id}/Vaults")]
-        public async Task<ActionResult<IEnumerable<Vault>>> GetVaultsById(string id)
-        {
-            try
-            {
-                Profile userInfo = await HttpContext.GetUserInfoAsync<Profile>();
-                return Ok(_vs.GetByProfileId(id, userInfo));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
     }
+
 }
