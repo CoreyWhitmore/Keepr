@@ -19,7 +19,7 @@ namespace Keepr.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Keep>> Get()
+        public ActionResult<Keep> Get()
         {
             try
             {

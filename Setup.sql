@@ -43,10 +43,9 @@
 -- CREATE TABLE vaultkeeps(
 --     id INT NOT NULL AUTO_INCREMENT,
 --     creatorId VARCHAR(255),
---     vaultId VARCHAR(255),
---     keepId VARCHAR(255),
+--     vaultId INT,
+--     keepId INT,
     
-
 --     PRIMARY KEY (id),
 
 --     FOREIGN KEY (creatorId)

@@ -1,33 +1,62 @@
 using System;
+using System.Collections.Generic;
 using Keepr.Models;
+using Keepr.Repositories;
 
 namespace Keepr.Services
 {
     public class KeepsService
     {
-        internal object GetAll()
+        private readonly KeepsRepository _repo;
+
+        public KeepsService(KeepsRepository repo)
         {
-            throw new NotImplementedException();
+            _repo = repo;
+        }
+        internal IEnumerable<Keep> GetAll()
+        {
+            return _repo.GetAll();
         }
 
-        internal object GetById(int id)
+        internal Keep GetById(int id)
         {
-            throw new NotImplementedException();
+            Keep data = _repo.GetById(id);
+            if (data == null)
+            {
+                throw new Exception("Invalid Id");
+            }
+            return data;
         }
 
-        internal object Create(Keep newKeep)
+        internal Keep Create(Keep newKeep)
         {
-            throw new NotImplementedException();
+            return _repo.Create(newKeep);
         }
 
         internal object Edit(Keep updated)
         {
-            throw new NotImplementedException();
+            var data = GetById(updated.Id);
+            if (data.CreatorId != updated.CreatorId)
+            {
+                throw new Exception("You must own this Keep to edit it.");
+            }
+            return _repo.Edit(updated);
         }
 
-        internal object Delete(int id1, string id2)
+        internal string Delete(int id, string userId)
         {
-            throw new NotImplementedException();
+            var data = GetById(id);
+            if (data.CreatorId != userId)
+            {
+                throw new Exception("You must own this Keep to delete it.");
+            }
+            _repo.Delete(id);
+            return "Successfully Deleted";
+        }
+
+        internal IEnumerable<Keep> GetByProfileId(string id)
+        {
+            return _repo.GetByProfileId(id);
         }
     }
 }
