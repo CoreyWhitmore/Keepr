@@ -10,10 +10,10 @@ namespace Keepr.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class VaultKeepController : ControllerBase
+    public class VaultKeepsController : ControllerBase
     {
         private readonly VaultKeepService _vks;
-        public VaultKeepController(VaultKeepService vks)
+        public VaultKeepsController(VaultKeepService vks)
         {
             _vks = vks;
 
@@ -22,13 +22,14 @@ namespace Keepr.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Vault>> Create([FromBody] Vault newVaultKeep)
+        public async Task<ActionResult<string>> Create([FromBody] VaultKeep newVaultKeep)
         {
             try
             {
                 Profile userInfo = await HttpContext.GetUserInfoAsync<Profile>();
                 newVaultKeep.CreatorId = userInfo.Id;
-                return Ok(_vks.Create(newVaultKeep));
+                _vks.Create(newVaultKeep);
+                return Ok("Success");
             }
             catch (Exception e)
             {
@@ -38,7 +39,7 @@ namespace Keepr.Controllers
 
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<Vault>> Delete(int id)
+        public async Task<ActionResult<VaultKeep>> Delete(int id)
         {
             try
             {

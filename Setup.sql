@@ -1,3 +1,6 @@
+-- DROP TABLE vaultkeeps;
+-- DROP TABLE vaults;
+-- DROP TABLE keeps;
 
 
 -- Initial Tables Setup-----------------------------------------------------------------------
