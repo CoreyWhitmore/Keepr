@@ -27,7 +27,26 @@ namespace Keepr.Repositories
             SELECT LAST_INSERT_ID();";
             int id = _db.ExecuteScalar<int>(sql, newVaultKeep);
             newVaultKeep.Id = id;
-            return newVaultKeep;
+
+            int vaultId = newVaultKeep.VaultId;
+            string sql2 = @" 
+            SELECT 
+            vault.*,
+            prof.*
+            FROM vaults vault
+            JOIN profiles prof ON vault.creatorId = prof.id
+            WHERE vault.id = @vaultId";
+            Vault resVault = _db.Query<Vault, Profile, Vault>(sql2, (vault, profile) =>
+             {
+                 vault.Creator = profile;
+                 return vault;
+             }, new { vaultId }, splitOn: "id").FirstOrDefault();
+
+            if (resVault.CreatorId == newVaultKeep.CreatorId)
+            {
+                return newVaultKeep;
+            }
+            return null;
         }
 
 
@@ -47,20 +66,18 @@ namespace Keepr.Repositories
             return result;
         }
 
-        internal IEnumerable<VaultKeep> GetByVaultId(int vaultId, Profile userInfo)
+        internal IEnumerable<VaultKeepViewModel> GetByVaultId(int vaultId, Profile userInfo)
         {
             var userId = userInfo.Id;
             string sql = @"
-            SELECT 
-            vaultkeep.*,
-            prof.*
-            FROM vaultkeeps vaultkeep
-            JOIN profiles prof ON vaultkeep.creatorId = prof.id
-            WHERE vaultId = @vaultId";
-            return _db.Query<VaultKeep, Profile, VaultKeep>(sql, (vaultKeep, profile) =>
-            {
-                return vaultKeep;
-            }, new { vaultId, userId }, splitOn: "id");
+            SELECT k.*, vaultKeeps.id AS VaultKeepId
+            FROM vaultKeeps
+            JOIN keeps k ON k.id = vaultKeeps.keepId
+            WHERE vaultId = @vaultId
+            ";
+            return _db.Query<VaultKeepViewModel>(sql, new { vaultId, userId });
+
+
         }
 
         internal void Delete(int id)

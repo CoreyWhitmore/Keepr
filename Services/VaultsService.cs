@@ -20,7 +20,11 @@ namespace Keepr.Services
             {
                 throw new Exception("Invalid Id");
             }
-            if (data.IsPrivate == true && data.CreatorId != userInfo.Id)
+            if (data.IsPrivate == false)
+            {
+                return data;
+            }
+            if (userInfo == null || data.CreatorId != userInfo.Id)
             {
                 throw new Exception("This Vault is Private");
             }

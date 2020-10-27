@@ -20,15 +20,18 @@ namespace Keepr.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<VaultKeep>> Create([FromBody] VaultKeep newVaultKeep)
+        public async Task<ActionResult<Keep>> Create([FromBody] VaultKeep newVaultKeep)
         {
             try
             {
                 Profile userInfo = await HttpContext.GetUserInfoAsync<Profile>();
                 newVaultKeep.CreatorId = userInfo.Id;
                 var result = _vks.Create(newVaultKeep);
-                return Ok(result);
-
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
             }
             catch (Exception e)
             {
