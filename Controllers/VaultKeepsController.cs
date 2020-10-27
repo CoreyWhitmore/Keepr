@@ -16,20 +16,19 @@ namespace Keepr.Controllers
         public VaultKeepsController(VaultKeepService vks)
         {
             _vks = vks;
-
-
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<string>> Create([FromBody] VaultKeep newVaultKeep)
+        public async Task<ActionResult<VaultKeep>> Create([FromBody] VaultKeep newVaultKeep)
         {
             try
             {
                 Profile userInfo = await HttpContext.GetUserInfoAsync<Profile>();
                 newVaultKeep.CreatorId = userInfo.Id;
-                _vks.Create(newVaultKeep);
-                return Ok("Success");
+                var result = _vks.Create(newVaultKeep);
+                return Ok(result);
+
             }
             catch (Exception e)
             {
@@ -39,12 +38,13 @@ namespace Keepr.Controllers
 
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<VaultKeep>> Delete(int id)
+        public async Task<ActionResult<string>> Delete(int id)
         {
             try
             {
                 Profile userInfo = await HttpContext.GetUserInfoAsync<Profile>();
-                return Ok(_vks.Delete(id, userInfo));
+                _vks.Delete(id, userInfo);
+                return Ok("Successfully Deleted");
             }
             catch (Exception e)
             {

@@ -60,16 +60,6 @@ namespace Keepr.Repositories
             return newKeep;
         }
 
-        internal IEnumerable<Keep> GetByVaultId(int vaultId)
-        {
-            string sql = @"
-            SELECT k.*, vaultKeep.id AS KeepId
-            FROM vaultKeeps vaultKeep
-            JOIN keeps k ON k.id = vaultKeep.keepId
-            WHERE vaultId = @vaultId
-            ";
-            return _db.Query<Keep>(sql, new { vaultId });
-        }
 
         internal IEnumerable<Keep> GetByProfileId(string id)
         {

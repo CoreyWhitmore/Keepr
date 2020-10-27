@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Keepr.Models;
 using Keepr.Repositories;
 
@@ -24,9 +25,9 @@ namespace Keepr.Services
         }
 
 
-        internal void Create(VaultKeep newVaultKeep)
+        internal VaultKeep Create(VaultKeep newVaultKeep)
         {
-            _repo.Create(newVaultKeep);
+            return _repo.Create(newVaultKeep);
         }
 
         internal string Delete(int id, Profile userInfo)
@@ -38,6 +39,12 @@ namespace Keepr.Services
             }
             _repo.Delete(id);
             return "Successfully Deleted";
+        }
+
+        internal IEnumerable<VaultKeep> GetByVaultId(int vaultId, Profile userInfo)
+        {
+            return _repo.GetByVaultId(vaultId, userInfo);
+
         }
     }
 }
