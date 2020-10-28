@@ -10,8 +10,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarText">
-      <router-link class="navbar-brand d-flex" :to="{ name: 'Profile' }">
-        <img class="rounded img-small" :src="profilePicture" alt="" v-if="$auth.isAuthenticated">
+      <router-link class="navbar-brand d-flex" :to="{name: 'Profile', params: {profileId: profile.id}}">
+        <img class="rounded img-small" :src="profile.picture" alt="" v-if="$auth.isAuthenticated">
       </router-link>
       <span class="navbar-text">
         <button class="btn btn-success" @click="login" v-if="!$auth.isAuthenticated">
@@ -29,8 +29,8 @@
   export default {
     name: "Navbar",
     computed: {
-      profilePicture() {
-        return this.$store.state.profile.picture
+      profile() {
+        return this.$store.state.profile
       }
     },
     methods: {

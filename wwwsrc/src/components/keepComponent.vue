@@ -53,11 +53,6 @@
 <script>
     export default {
         name: "keep-component",
-        methods: {
-            keepModal() {
-
-            }
-        },
         props: ["keepProp"],
     };
 </script>

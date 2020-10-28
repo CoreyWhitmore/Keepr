@@ -4,6 +4,8 @@ import VueRouter from "vue-router";
 import Home from "../pages/Home.vue";
 // @ts-ignore
 import Profile from "../pages/Profile.vue";
+// @ts-ignore
+import Vault from "../pages/Vault.vue";
 
 Vue.use(VueRouter);
 
@@ -14,9 +16,18 @@ const routes = [
     component: Home,
   },
   {
-    path: "/profile",
+    path: "/profile/:profileId",
     name: "Profile",
     component: Profile,
+  },
+  {
+    path: "/vault/:vaultId",
+    name: "Vault",
+    component: Vault,
+  },
+  {
+    path: "*",
+    redirect: '/'
   }
 ];
 

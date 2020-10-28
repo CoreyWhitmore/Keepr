@@ -1,6 +1,5 @@
 <template>
-  <div class="home container-fluid">
-    <h1>Welcome</h1>
+  <div class="home container-fluid py-3">
     <div class="card-columns">
       <keep-component v-for="keep in keeps" :key="keep.id" :keepProp="keep"></keep-component>
     </div>

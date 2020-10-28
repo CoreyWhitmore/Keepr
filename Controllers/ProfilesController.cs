@@ -39,6 +39,19 @@ namespace Keepr.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<Profile> GetById(string id)
+        {
+            try
+            {
+                return Ok(_ps.GetProfileById(id));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("{id}/keeps")]
         public async Task<ActionResult<IEnumerable<Keep>>> GetKeepsById(string id)
         {
@@ -53,7 +66,7 @@ namespace Keepr.Controllers
             }
         }
 
-        [HttpGet("{id}/Vaults")]
+        [HttpGet("{id}/vaults")]
         public async Task<ActionResult<IEnumerable<Vault>>> GetVaultsById(string id)
         {
             try
