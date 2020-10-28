@@ -4,3 +4,13 @@
   border-color: darken($color: $primary, $amount: 10);
   border-width: medium;
 }
+
+.bottom-right {
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+}
+
+.img-small{
+  max-height: 5vh;
+}
