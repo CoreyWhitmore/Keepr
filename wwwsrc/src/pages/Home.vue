@@ -12,7 +12,6 @@
     name: "home",
     mounted() {
       this.$store.dispatch("getPublicKeeps")
-      console.log(this.keeps);
     },
     data() {
       return {

@@ -75,7 +75,7 @@
         methods: {
             incrementKeepViews() {
                 this.keepProp.views++
-                this.$store.dispatch("editKeep", this.newKeep)
+                this.$store.dispatch("editKeep", this.keepProp)
             },
             addKeepTo(vault) {
                 let vaultKeep = {
