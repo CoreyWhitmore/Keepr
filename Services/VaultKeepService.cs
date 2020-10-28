@@ -41,9 +41,9 @@ namespace Keepr.Services
             return "Successfully Deleted";
         }
 
-        internal IEnumerable<VaultKeepViewModel> GetByVaultId(int vaultId, Profile userInfo)
+        internal IEnumerable<VaultKeepViewModel> GetByVaultId(int vaultId)
         {
-            return _repo.GetByVaultId(vaultId, userInfo);
+            return _repo.GetByVaultId(vaultId);
         }
     }
 }

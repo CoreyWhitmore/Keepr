@@ -4,32 +4,36 @@
     <h6>{{activeVault.description}}</h6>
     <h6>Keeps: {{keepsLength}}</h6>
     <div class="card-columns">
-      <keep-component v-for="keep in keeps" :key="keep.id" :keepProp="keep"></keep-component>
+      <keep-component v-for="keep in activeVaultKeeps" :key="keep.id" :keepProp="keep"></keep-component>
     </div>
   </div>
 </template>
 
 <script>
+  import keepComponent from "../components/keepComponent.vue"
   export default {
     name: "home",
     mounted() {
       this.$store.dispatch("getActiveVault", this.$route.params.vaultId)
       this.$store.dispatch("getVaultKeeps", this.$route.params.vaultId)
-      console.log(this.keeps);
+      console.log(this.activeVaultKeeps);
     },
     computed: {
-      keeps() {
-        return this.$store.state.activeVaultkeeps
+      activeVaultKeeps() {
+        return this.$store.state.activeVaultKeeps
       },
       activeVault() {
         return this.$store.state.activeVault
       },
       keepsLength() {
-        if (this.keeps) {
-          return keeps.length
+        if (this.activeVaultKeeps) {
+          return this.activeVaultKeeps.length
         }
         return 0
       }
+    },
+    components: {
+      keepComponent
     },
   };
 </script>
