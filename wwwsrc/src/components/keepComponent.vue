@@ -1,23 +1,33 @@
 <template>
     <div class="keep-component">
-        <div class="card" type="button" data-toggle="modal" data-target="#staticBackdrop">
+        <div class="card" type="button" data-toggle="modal" :data-target="'#staticBackdrop' + keepProp.id"
+            @click="incrementKeepViews">
             <img :src="keepProp.img" class="card-img-top" alt="...">
-            <div class="bottom-right">{{keepProp.name}}</div>
+            <div class="bottom-right">
+                {{keepProp.name}}
+                <router-link :to="{name: 'Profile', params: {profileId: keepProp.creatorId}}">
+                    <img class="img-small ml-2" :src="keepProp.creator.picture" alt="">
+                </router-link>
+            </div>
         </div>
 
         <!-- Modal that displays on click -->
-        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" :id="'staticBackdrop' + keepProp.id" tabindex="-1"
+            :aria-labelledby="'staticBackdropLabel' + keepProp.id" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-6">
-                                <img :src="keepProp.img" class="card-img" alt="...">
+                                <img :src="this.keepProp.img" class="card-img" alt="...">
                             </div>
                             <div class="col-6 d-flex flex-column justify-content-between">
                                 <div class="row justify-content-end pr-2">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">X</button>
+                                </div>
+                                <div>
+                                    <p>Views: {{keepProp.views}}</p>
+                                    <p>Keeps: {{keepProp.keeps}}</p>
                                 </div>
                                 <div class="row flex-column text-center">
                                     <h3>{{keepProp.name}}</h3>
@@ -31,8 +41,8 @@
                                             Add to Vault
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <button class="dropdown-item" type="button">List of vaults will go
-                                                here</button>
+                                            <button v-for="vault in myVaults" class="dropdown-item" type="button"
+                                                @click="addKeepTo(vault)">{{vault.name}}</button>
                                         </div>
                                     </div>
                                     <i class="fa fa-trash" aria-hidden="true"></i>
@@ -54,5 +64,26 @@
     export default {
         name: "keep-component",
         props: ["keepProp"],
+        mounted() {
+            this.$store.dispatch("getMyVaults")
+        },
+        computed: {
+            myVaults() {
+                return this.$store.state.myVaults
+            }
+        },
+        methods: {
+            incrementKeepViews() {
+                this.keepProp.views++
+                this.$store.dispatch("editKeep", this.newKeep)
+            },
+            addKeepTo(vault) {
+                let vaultKeep = {
+                    vaultId: vault.id,
+                    keepId: this.keepProp.id
+                }
+                this.$store.dispatch("createVaultKeep", vaultKeep)
+            }
+        }
     };
 </script>

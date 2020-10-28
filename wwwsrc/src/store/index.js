@@ -10,6 +10,8 @@ export default new Vuex.Store({
     foreignProfile: {},
     keeps: [],
     vaults: [],
+    myVaults: [],
+    activeVault: {},
     activeVaultKeeps: [],
   },
   mutations: {
@@ -25,8 +27,18 @@ export default new Vuex.Store({
     setPublicVaults(state, vaults) {
       state.vaults = vaults;
     },
+    setMyVaults(state, vaults) {
+      state.myVaults = vaults;
+    },
     setActiveVaultKeeps(state, keeps) {
       state.activeVaultKeeps = keeps;
+    },
+    setActiveVault(state, vault) {
+      state.activeVault = vault;
+    },
+    updateKeep(state, newKeep) {
+      let index = state.keeps.findIndex(k => k.id = newKeep.id)
+      state.keeps[index] = newKeep
     }
   },
   actions: {
@@ -72,10 +84,58 @@ export default new Vuex.Store({
         console.error(error);
       }
     },
+    async getMyVaults({ commit, state }) {
+      try {
+        let id = state.profile.id
+        let res = await api.get("profiles/" + id + "/vaults")
+        commit("setMyVaults", res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async getVaultKeeps({ commit, dispatch }, vaultId) {
       try {
         let res = await api.get("vaults/" + vaultId + "/keeps")
         commit("setActiveVaultKeeps", res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async createVault({ commit, dispatch }, newVault) {
+      try {
+        let res = await api.post("vaults", newVault)
+        dispatch("getProfileVaults")
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getActiveVault({ commit }, vaultId) {
+      try {
+        let res = await api.get("vaults/" + vaultId)
+        commit("setActiveVault", res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async createKeep({ commit, dispatch }, newKeep) {
+      try {
+        let res = await api.post("keeps", newKeep)
+        dispatch("getProfileKeeps")
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async editKeep({ commit, dispatch }, newKeep) {
+      try {
+        let res = await api.put("keeps/" + newKeep.id, newKeep)
+        commit("updateKeep", newKeep)
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async createVaultKeep({ commit, dispatch }, vaultKeep) {
+      try {
+        await api.post("vaultkeeps", vaultKeep)
       } catch (error) {
         console.error(error);
       }
