@@ -99,8 +99,9 @@
     mounted() {
       this.$store.dispatch("getProfile")
       this.$store.dispatch("getForeignProfile", this.$route.params.profileId)
-      this.$store.dispatch("getProfileKeeps")
-      this.$store.dispatch("getProfileVaults")
+      this.$store.dispatch("getProfileVaults", this.$route.params.profileId)
+      this.$store.dispatch("getProfileKeeps", this.$route.params.profileId)
+      console.log(this.$store.state.foreignProfile);
     },
     data() {
       return {

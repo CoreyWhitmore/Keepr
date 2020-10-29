@@ -1,8 +1,8 @@
 <template>
     <div class="keep-component">
-        <div class="card" type="button" data-toggle="modal" :data-target="'#staticBackdrop' + keepProp.id"
-            @click="incrementKeepViews">
-            <img :src="keepProp.img" class="card-img-top" alt="...">
+        <div class="card" @click="incrementKeepViews">
+            <img :src="keepProp.img" class="card-img-top" alt="..." type="button" data-toggle="modal"
+                :data-target="'#staticBackdrop' + keepProp.id">
             <div class="bottom-right">
                 {{keepProp.name}}
                 <router-link :to="{name: 'Profile', params: {profileId: keepProp.creatorId}}">
@@ -45,7 +45,8 @@
                                                 @click="addKeepTo(vault)">{{vault.name}}</button>
                                         </div>
                                     </div>
-                                    <button class="btn-primary" @click="removeFromVault">Remove from Vault</button>
+                                    <button v-if="inVault" class="btn-primary" @click="removeFromVault">Remove from
+                                        Vault</button>
                                     <i v-if="isOwner" class="fa fa-trash" aria-hidden="true"
                                         @click="deleteKeep(keepProp.id)"></i>
                                     <h5>
@@ -67,7 +68,6 @@
         name: "keep-component",
         props: ["keepProp"],
         mounted() {
-            this.$store.dispatch("getMyVaults")
         },
         computed: {
             myVaults() {
@@ -75,12 +75,16 @@
             },
             isOwner() {
                 return this.$store.state.profile.id == this.keepProp.creator.id
-            }
+            },
+            inVault() {
+                return (this.$route.name == "Vault")
+            },
         },
         methods: {
             incrementKeepViews() {
                 this.keepProp.views++
                 this.$store.dispatch("editKeepStats", this.keepProp)
+                this.$store.dispatch("getMyVaults")
             },
             incrementKeepKeeps() {
                 this.keepProp.keeps++
@@ -99,9 +103,7 @@
                     this.$store.dispatch("deleteKeep", id)
                 }
             },
-            inVault() {
-                return this.$route.name == Vault
-            },
+
             removeFromVault() {
                 if (confirm("Do you really want to delete this keep?")) {
                     this.$store.dispatch("deleteVaultKeep", this.keepProp.vaultKeepId)

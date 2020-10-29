@@ -20,10 +20,12 @@
     mounted() {
       this.$store.dispatch("getProfile")
       this.$store.dispatch("getActiveVault", this.$route.params.vaultId)
-      if (!this.isOwner) {
-        this.$router.push({ name: 'Home' })
+      this.checkPermissions()
+    },
+    data() {
+      return {
+        count: 0
       }
-      this.$store.dispatch("getVaultKeeps", this.$route.params.vaultId)
     },
     computed: {
       activeVaultKeeps() {
@@ -39,7 +41,12 @@
         return 0
       },
       isOwner() {
-        return this.$store.state.activeVault.creator.id == this.$store.state.profile.id
+        let result = false
+        try {
+          result = this.$store.state.activeVault.creator.id == this.$store.state.profile.id
+        } catch (error) {
+        }
+        return result
       },
       profile() {
         return this.$store.state.profile
@@ -51,6 +58,21 @@
           this.$store.dispatch("deleteVault", id)
           this.$router.push({ name: 'Profile', params: { profileId: this.profile.id } })
         }
+      },
+      checkPermissions() {
+        if (this.activeVault.isPrivate == undefined && this.count < 150) {
+          setTimeout(() => {
+            this.count++
+            this.checkPermissions()
+          }, 200);
+        }
+        else if (!this.isOwner && this.activeVault.isPrivate != false) {
+          this.$router.push({ name: 'Home' })
+        }
+        else {
+          this.$store.dispatch("getVaultKeeps", this.$route.params.vaultId)
+        }
+
       }
     },
     components: {

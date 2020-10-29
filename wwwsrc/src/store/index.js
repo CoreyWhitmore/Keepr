@@ -66,26 +66,25 @@ export default new Vuex.Store({
         console.error(error);
       }
     },
-    async getProfileKeeps({ commit, state }) {
+    async getProfileKeeps({ commit, dispatch, state }, profileId) {
       try {
-        let id = state.foreignProfile.id
-        let res = await api.get("profiles/" + id + "/keeps")
+        let res = await api.get("profiles/" + profileId + "/keeps")
         commit("setPublicKeeps", res.data);
       } catch (error) {
         console.error(error);
       }
     },
-    async getProfileVaults({ commit, state }) {
+    async getProfileVaults({ commit, dispatch, state }, profileId) {
       try {
-        let id = state.foreignProfile.id
-        let res = await api.get("profiles/" + id + "/vaults")
+        let res = await api.get("profiles/" + profileId + "/vaults")
         commit("setPublicVaults", res.data);
       } catch (error) {
         console.error(error);
       }
     },
-    async getMyVaults({ commit, state }) {
+    async getMyVaults({ commit, dispatch, state }) {
       try {
+        dispatch("getProfile")
         let id = state.profile.id
         let res = await api.get("profiles/" + id + "/vaults")
         commit("setMyVaults", res.data);

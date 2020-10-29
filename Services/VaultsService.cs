@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Keepr.Models;
 using Keepr.Repositories;
 
@@ -47,7 +48,7 @@ namespace Keepr.Services
             return "Successfully Deleted";
         }
 
-        internal object GetByProfileId(string profileId, Profile userInfo)
+        internal IEnumerable<Vault> GetByProfileId(string profileId, Profile userInfo)
         {
             return _repo.GetByProfileId(profileId, userInfo);
         }

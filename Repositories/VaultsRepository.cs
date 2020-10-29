@@ -2,6 +2,7 @@ using System.Data;
 using Keepr.Models;
 using Dapper;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Keepr.Repositories
 {
@@ -45,20 +46,38 @@ namespace Keepr.Repositories
             return newVault;
         }
 
-        internal object GetByProfileId(string profileId, Profile userInfo)
+        internal IEnumerable<Vault> GetByProfileId(string profileId, Profile userInfo)
         {
-            string sql = @"
-            SELECT 
-            vault.*,
-            prof.*
-            FROM vaults vault
-            JOIN profiles prof ON vault.creatorId = prof.id
-            WHERE prof.id = @profileId OR isPrivate = false";
-            return _db.Query<Vault, Profile, Vault>(sql, (vault, profile) =>
+            if (userInfo != null && userInfo.Id == profileId)
             {
-                vault.Creator = profile;
-                return vault;
-            }, new { profileId }, splitOn: "id");
+                string sql = @"
+                    SELECT 
+                    vault.*,
+                    prof.*
+                    FROM vaults vault
+                    JOIN profiles prof ON vault.creatorId = prof.id
+                    WHERE prof.id = @profileId OR isPrivate = false";
+                return _db.Query<Vault, Profile, Vault>(sql, (vault, profile) =>
+                {
+                    vault.Creator = profile;
+                    return vault;
+                }, new { profileId }, splitOn: "id");
+            }
+            else
+            {
+                string sql = @"
+                    SELECT 
+                    vault.*,
+                    prof.*
+                    FROM vaults vault
+                    JOIN profiles prof ON vault.creatorId = prof.id
+                    WHERE prof.id = @profileId AND isPrivate = false";
+                return _db.Query<Vault, Profile, Vault>(sql, (vault, profile) =>
+                {
+                    vault.Creator = profile;
+                    return vault;
+                }, new { profileId }, splitOn: "id");
+            }
         }
 
         internal void Delete(int id)

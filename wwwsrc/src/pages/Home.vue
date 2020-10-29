@@ -12,6 +12,7 @@
     name: "home",
     mounted() {
       this.$store.dispatch("getPublicKeeps")
+      this.$store.dispatch("getMyVaults")
     },
     data() {
       return {
