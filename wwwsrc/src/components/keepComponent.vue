@@ -45,7 +45,8 @@
                                                 @click="addKeepTo(vault)">{{vault.name}}</button>
                                         </div>
                                     </div>
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <i v-if="isOwner" class="fa fa-trash" aria-hidden="true"
+                                        @click="deleteKeep(keepProp.id)"></i>
                                     <h5>
                                         <img class="img-small" :src="keepProp.creator.picture" alt="">
                                         {{keepProp.creator.email}}
@@ -70,12 +71,19 @@
         computed: {
             myVaults() {
                 return this.$store.state.myVaults
+            },
+            isOwner() {
+                return this.$store.state.profile.id == this.keepProp.creator.id
             }
         },
         methods: {
             incrementKeepViews() {
                 this.keepProp.views++
-                this.$store.dispatch("editKeep", this.keepProp)
+                this.$store.dispatch("editKeepStats", this.keepProp)
+            },
+            incrementKeepKeeps() {
+                this.keepProp.keeps++
+                this.$store.dispatch("editKeepStats", this.keepProp)
             },
             addKeepTo(vault) {
                 let vaultKeep = {
@@ -83,6 +91,12 @@
                     keepId: this.keepProp.id
                 }
                 this.$store.dispatch("createVaultKeep", vaultKeep)
+                this.incrementKeepKeeps()
+            },
+            deleteKeep(id) {
+                if (confirm("Do you really want to delete this keep?")) {
+                    this.$store.dispatch("deleteKeep", id)
+                }
             }
         }
     };

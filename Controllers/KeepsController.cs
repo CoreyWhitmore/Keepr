@@ -79,6 +79,19 @@ namespace Keepr.Controllers
             }
         }
 
+        [HttpPut("{id}/stats")]
+        public ActionResult<Keep> EditStats([FromBody] Keep updated, int id)
+        {
+            try
+            {
+                return Ok(_ks.EditStats(updated));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult<Keep>> Delete(int id)

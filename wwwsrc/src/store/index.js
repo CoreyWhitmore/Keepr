@@ -133,9 +133,32 @@ export default new Vuex.Store({
         console.error(error);
       }
     },
+    async editKeepStats({ commit, dispatch }, newKeep) {
+      try {
+        let res = await api.put("keeps/" + newKeep.id + "/stats", newKeep)
+        commit("updateKeep", newKeep)
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async createVaultKeep({ commit, dispatch }, vaultKeep) {
       try {
         await api.post("vaultkeeps", vaultKeep)
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async deleteKeep({ commit, dispatch }, id) {
+      try {
+        await api.delete("keeps/" + id)
+        dispatch("getProfileKeeps")
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async deleteVault({ commit, dispatch }, id) {
+      try {
+        await api.delete("vaults/" + id)
       } catch (error) {
         console.error(error);
       }

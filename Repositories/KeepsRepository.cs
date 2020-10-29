@@ -93,6 +93,20 @@ namespace Keepr.Repositories
             return updated;
         }
 
+        // edit that only has access to views, keeps, and shares on the keep model
+        internal Keep EditStats(Keep updated)
+        {
+            string sql = @"
+            UPDATE keeps
+            SET
+            views = @views,
+            keeps = @keeps,
+            shares = @shares
+            WHERE id = @Id;";
+            _db.Execute(sql, updated);
+            return updated;
+        }
+
         internal void Delete(int id)
         {
             string sql = "DELETE FROM keeps WHERE keeps.id = @id";

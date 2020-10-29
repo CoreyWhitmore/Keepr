@@ -97,6 +97,7 @@
   export default {
     name: "profile",
     mounted() {
+      this.$store.dispatch("getProfile")
       this.$store.dispatch("getForeignProfile", this.$route.params.profileId)
       this.$store.dispatch("getProfileKeeps")
       this.$store.dispatch("getProfileVaults")

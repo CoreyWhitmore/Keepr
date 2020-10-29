@@ -43,6 +43,12 @@ namespace Keepr.Services
             return _repo.Edit(updated);
         }
 
+        internal object EditStats(Keep updated)
+        {
+            var data = GetById(updated.Id);
+            return _repo.EditStats(updated);
+        }
+
         internal string Delete(int id, string userId)
         {
             var data = GetById(id);
