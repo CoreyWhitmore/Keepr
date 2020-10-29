@@ -19,10 +19,10 @@
     name: "home",
     mounted() {
       this.$store.dispatch("getProfile")
+      this.$store.dispatch("getActiveVault", this.$route.params.vaultId)
       if (!this.isOwner) {
         this.$router.push({ name: 'Home' })
       }
-      this.$store.dispatch("getActiveVault", this.$route.params.vaultId)
       this.$store.dispatch("getVaultKeeps", this.$route.params.vaultId)
     },
     computed: {

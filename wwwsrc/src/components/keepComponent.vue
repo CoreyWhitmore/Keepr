@@ -34,7 +34,7 @@
                                     <p>{{keepProp.description}}</p>
                                 </div>
                                 <div class="row justify-content-between align-items-center pr-3">
-                                    <div class="dropdown">
+                                    <div v-if="!inVault" class="dropdown">
                                         <button class="btn btn-secondary dropdown-toggle" type="button"
                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false">
@@ -45,6 +45,7 @@
                                                 @click="addKeepTo(vault)">{{vault.name}}</button>
                                         </div>
                                     </div>
+                                    <button class="btn-primary" @click="removeFromVault">Remove from Vault</button>
                                     <i v-if="isOwner" class="fa fa-trash" aria-hidden="true"
                                         @click="deleteKeep(keepProp.id)"></i>
                                     <h5>
@@ -96,6 +97,14 @@
             deleteKeep(id) {
                 if (confirm("Do you really want to delete this keep?")) {
                     this.$store.dispatch("deleteKeep", id)
+                }
+            },
+            inVault() {
+                return this.$route.name == Vault
+            },
+            removeFromVault() {
+                if (confirm("Do you really want to delete this keep?")) {
+                    this.$store.dispatch("deleteVaultKeep", this.keepProp.vaultKeepId)
                 }
             }
         }

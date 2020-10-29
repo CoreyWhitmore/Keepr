@@ -162,6 +162,14 @@ export default new Vuex.Store({
       } catch (error) {
         console.error(error);
       }
+    },
+    async deleteVaultKeep({ commit, dispatch }, id) {
+      try {
+        await api.delete("vaultkeeps/" + id)
+      } catch (error) {
+        console.error(error);
+      }
     }
   },
+
 });
