@@ -97,11 +97,7 @@
   export default {
     name: "profile",
     mounted() {
-      this.$store.dispatch("getProfile")
-      this.$store.dispatch("getForeignProfile", this.$route.params.profileId)
-      this.$store.dispatch("getProfileVaults", this.$route.params.profileId)
-      this.$store.dispatch("getProfileKeeps", this.$route.params.profileId)
-      console.log(this.$store.state.foreignProfile);
+      this.initialize()
     },
     data() {
       return {
@@ -140,6 +136,23 @@
         }
         else {
           console.log("Error");
+        }
+      },
+      initialize() {
+        this.$store.dispatch("getProfile")
+        this.$store.dispatch("getForeignProfile", this.$route.params.profileId)
+        this.$store.dispatch("getProfileVaults", this.$route.params.profileId)
+        this.$store.dispatch("getProfileKeeps", this.$route.params.profileId)
+        let retreived = false
+
+        //workaround for authorization issue. Retries after 1,4,16, and 64 seconds to see if the user is logged in
+        for (let i = 0; i <= 4; i++) {
+          setTimeout(() => {
+            this.$store.dispatch("getProfile")
+            this.$store.dispatch("getForeignProfile", this.$route.params.profileId)
+            this.$store.dispatch("getProfileVaults", this.$route.params.profileId)
+            this.$store.dispatch("getProfileKeeps", this.$route.params.profileId)
+          }, 1000 * (4 ** i));
         }
       }
     },
