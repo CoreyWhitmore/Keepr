@@ -50,7 +50,10 @@
                                     <i v-if="isOwner" class="fa fa-trash" aria-hidden="true"
                                         @click="deleteKeep(keepProp.id)"></i>
                                     <h5>
-                                        <img class="img-small" :src="keepProp.creator.picture" alt="">
+                                        <router-link data-dismiss="modal"
+                                            :to="{name: 'Profile', params: {profileId: keepProp.creatorId}}">
+                                            <img class="img-small ml-2" :src="keepProp.creator.picture" alt="">
+                                        </router-link>
                                         {{keepProp.creator.email}}
                                     </h5>
                                 </div>
@@ -97,18 +100,46 @@
                 }
                 this.$store.dispatch("createVaultKeep", vaultKeep)
                 this.incrementKeepKeeps()
+                swal.fire(`${this.keepProp.name} was added to ${vault.name}`)
             },
             deleteKeep(id) {
-                if (confirm("Do you really want to delete this keep?")) {
-                    this.$store.dispatch("deleteKeep", id)
-                }
+                Swal.fire({
+                    title: `Are you sure you want to delete ${this.keepProp.name}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.$store.dispatch("deleteKeep", id)
+                        Swal.fire({
+                            title: `Successfully deleted ${this.keepProp.name}`,
+                            showConfirmButton: false
+                        })
+                        setTimeout(() => {
+                            location.reload()
+                        }, 500);
+                    }
+                })
             },
-
             removeFromVault() {
-                if (confirm("Do you really want to delete this keep?")) {
-                    this.$store.dispatch("deleteVaultKeep", this.keepProp.vaultKeepId)
-                }
-            }
+                Swal.fire({
+                    title: `Are you sure you want to remove ${this.keepProp.name} from this Vault?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.$store.dispatch("deleteVaultKeep", this.keepProp.vaultKeepId)
+                        Swal.fire(
+                            `Successfully removed ${this.keepProp.name} from your vault`
+                        )
+                    }
+                })
+            },
         }
     };
 </script>
