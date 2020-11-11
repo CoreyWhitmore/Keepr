@@ -18,3 +18,8 @@
 .card{
   display: inline-block
 }
+
+.card-columns {
+  column-count:5;
+  column-gap: .25rem;
+}

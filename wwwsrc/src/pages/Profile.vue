@@ -8,20 +8,20 @@
         <h3>Keeps: {{keeps.length}}</h3>
       </div>
     </div>
-    <div class="row p-3">
 
-      <div class="col-12 d-flex align-items-center">
+    <div class="row p-3">
+      <div class="d-flex align-items-center">
         <h2>My Vaults</h2>
         <div type="button" data-toggle="modal" data-target="#createVaultModal">
           <i v-if="isOwner" class="fa fa-plus pl-3 text-success" aria-hidden="true"></i>
         </div>
       </div>
-      <div class="col-12">
-        <div class="card-columns">
-          <vault-component v-for="vault in vaults" :key="vault.id" :vaultProp="vault"></vault-component>
-        </div>
+      <div class="card-columns">
+        <vault-component v-for="vault in vaults" :key="vault.id" :vaultProp="vault"></vault-component>
+
       </div>
     </div>
+
     <div class="row flex-column p-3">
       <div class="d-flex align-items-center">
         <h2>My Keeps</h2>
