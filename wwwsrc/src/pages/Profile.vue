@@ -10,7 +10,7 @@
     </div>
 
     <div class="row p-3">
-      <div class="d-flex align-items-center">
+      <div class="d-flex col-12 align-items-center">
         <h2>My Vaults</h2>
         <div type="button" data-toggle="modal" data-target="#createVaultModal">
           <i v-if="isOwner" class="fa fa-plus pl-3 text-success" aria-hidden="true"></i>
@@ -125,14 +125,21 @@
       createVault() {
         if (this.newVault.name) {
           this.$store.dispatch("createVault", this.newVault)
+          setTimeout(() => {
+            location.reload()
+          }, 500);
         }
         else {
           console.log("Error");
         }
+
       },
       createKeep() {
         if (this.newKeep.name && this.newKeep.img) {
           this.$store.dispatch("createKeep", this.newKeep)
+          setTimeout(() => {
+            location.reload()
+          }, 500);
         }
         else {
           console.log("Error");
